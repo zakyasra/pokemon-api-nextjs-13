@@ -5,12 +5,21 @@ import NavbarList from "./Navbar/NavbarList";
 import { FaEllipsisH } from "react-icons/fa";
 import Drawers from "./Navbar/Drawer";
 import { usePathname } from "next/navigation";
+import { shallow } from "zustand/shallow";
+import useApp from "@/hooks/useApp";
 
-const Navbar = () => {
+const Navbar = ({ isJumbotron }) => {
   const pathname = usePathname();
   const activePath = pathname.slice(1, pathname.lastIndexOf("/"));
-  const [generation, setGeneration] = useState([]);
-  const [type, setType] = useState([]);
+  const [generation, setGeneration, type, setType] = useApp(
+    (store) => [
+      store.generation,
+      store.setGeneration,
+      store.type,
+      store.setType,
+    ],
+    shallow
+  );
   const [drawer, setDrawer] = useState(false);
 
   const handleDrawer = () => {
@@ -66,19 +75,20 @@ const Navbar = () => {
             >
               <FaEllipsisH />
             </div>
-
-            <div className={`lg:flex hidden space-x-8`}>
-              {["generation", "type"]?.map((d, idx) => {
-                return (
-                  <NavbarList
-                    key={idx}
-                    type={d}
-                    data={d == "type" ? type : generation}
-                    activePath={activePath}
-                  />
-                );
-              })}
-            </div>
+            {isJumbotron == false ? (
+              <div className={`lg:flex hidden space-x-8`}>
+                {["generation", "type"]?.map((d, idx) => {
+                  return (
+                    <NavbarList
+                      key={idx}
+                      type={d}
+                      data={d == "type" ? type : generation}
+                      activePath={activePath}
+                    />
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
         </div>
       </nav>

@@ -6,7 +6,7 @@ import Jumbotron from "./Jumbotron";
 const Layout = ({ children, isJumbotron = false }) => {
   return (
     <>
-      <Navbar />
+      <Navbar isJumbotron={isJumbotron}/>
       {isJumbotron ? <Jumbotron /> : null}
       {children}
       <Footer />
